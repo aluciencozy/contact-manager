@@ -1,1 +1,17 @@
-name: Deploy to Azure VM on: push: branches: [ main ] jobs: deploy: runs-on: ubuntu-latest steps: - name: SSH and deploy uses: appleboy/ssh-action@v1.0.3 with: host: ${{ secrets.SSH_HOST }} username: ${{ secrets.SSH_USER }} key: ${{ secrets.SSH_PRIVATE_KEY }} script: | cd /var/www/html git pull origin main
+name: Deploy to Azure VM
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/html
+            git pull origin main
