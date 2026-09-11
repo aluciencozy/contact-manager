@@ -1,0 +1,2 @@
+<?php 
+// delete contacts logic
