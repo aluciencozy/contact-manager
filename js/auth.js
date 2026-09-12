@@ -24,9 +24,7 @@ if (loginForm) {
 
             if (response.ok && result.success) {
                 
-                localStorage.setItem("token", result.token);
-                loginResultMessage.textContent = "Login successful!";
-                loginResultMessage.style.color = "green";
+                localStorage.setItem("token", result.token); // Change to handle in backend (php)
                 window.location.href = "contacts.html";
             } else {
                 loginResultMessage.textContent = "Login failed: " + result.message;
@@ -41,13 +39,13 @@ if (loginForm) {
 });
 }
 
-const registerButton = document.getElementById("registerButton");
+const registerForm = document.getElementById("registerForm");
 
-if (registerButton) {
+if (registerForm) {
 
     const registerResultMessage = document.getElementById("registerResultMessage");
 
-    registerButton.addEventListener("click", async (e) => {
+    registerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const username = document.getElementById("username").value;
