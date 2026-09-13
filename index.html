@@ -8,5 +8,23 @@
     <link rel="stylesheet" href="css/styles.css" />
     <script type="module" src="js/auth.js"></script>
   </head>
-  <body></body>
+
+  <body>
+    <h1>Login</h1>
+
+    <form id="loginForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required />
+      <br />
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required />
+
+      <button type="submit" id="loginButton">Login</button>
+    </form>
+    
+    <p id="loginResultMessage"></p>
+
+    <p>Don't have an account? <a href="register.html">Register here.</a></p>
+  </body>
 </html>
