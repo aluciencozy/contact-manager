@@ -61,9 +61,9 @@ if (registerForm) {
       if (response.ok && result.success) {
         window.location.href = "contacts.html";
       } else {
-        loginResultMessage.textContent =
+        registerResultMessage.textContent =
           "Registration failed: " + result.message;
-        loginResultMessage.style.color = "red";
+        registerResultMessage.style.color = "red";
       }
     } catch (error) {
       console.error("Registration failed:", error);
