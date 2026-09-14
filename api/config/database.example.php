@@ -1,12 +1,13 @@
 <?php
 
-// we can replace these values with real database values for testing
+// Copy this file to database.php and replace the password with the
+// server-side application password. database.php is ignored by Git.
 $dbHost = "localhost";
-$dbUser = "OUR_DB_USER";
-$dbPass = "OUR_DB_PASSWORD";
-$dbName = "OUR_DB_NAME";
+$dbUser = "contact_manager_app";
+$dbPass = "YOUR_DATABASE_PASSWORD";
+$dbName = "contact_manager";
 
-/* exapmle call i pulled from docs: https://www.php.net/manual/en/mysqli.quickstart.connections.php
+/* Example call from the PHP documentation: https://www.php.net/manual/en/mysqli.quickstart.connections.php
 <?php
 
 $mysqli = new mysqli("localhost", "user", "password", "database");
