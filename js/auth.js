@@ -73,3 +73,21 @@ if (registerForm) {
     }
   });
 }
+
+const logoutButton = document.getElementById("logoutButton");
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", async () => {
+    try {
+      const response = await fetch("/api/logout.php", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        window.location.href = "index.html";
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  });
+}
