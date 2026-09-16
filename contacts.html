@@ -8,10 +8,42 @@
     <link rel="stylesheet" href="css/styles.css" />
     <script type="module" src="js/contacts.js"></script>
   </head>
-  
+
   <body>
     <h1>Contacts</h1>
-    
+    <button id="addContactButton" type="button">Add Contact</button>
+    <dialog id="contactDialog">
+      <form id="contactForm">
+
+         <label>First Name
+          <input name="first_name" required>
+         </label>
+         <br/>
+         <label>
+          Last name
+          <input name="last_name" required>
+         </label>
+
+         <br/>
+         <label>
+          Email
+          <input name="email" type="email">
+         </label>
+
+         <br/>
+         <label>
+          Phone Number
+          <input name="phone_number" required>
+         </label>
+         <br/>
+         <br/>
+
+        <button type="submit">Save contact</button>
+        <button id="cancelContactButton" type="button">Cancel</button>
+      </form>
+    </dialog>
+
+    <br/>
     <button id="logoutButton">Logout</button>
   </body>
 </html>

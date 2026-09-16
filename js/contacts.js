@@ -1,3 +1,21 @@
+const addButton = document.getElementById("addContactButton");
+const dialog = document.getElementById("contactDialog");
+const cancelButton = document.getElementById("cancelContactButton");
+const contactForm = document.getElementById("contactForm");
+
+addButton.addEventListener("click", () => { dialog.showModal(); });
+
+cancelButton.addEventListener("click", () => { dialog.close(); });
+
+contactForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+    //fill in functionality
+  dialog.close();
+});
+
+contactForm
+
 // all contact CRUD logic
 
 const logoutButton = document.getElementById("logoutButton");
