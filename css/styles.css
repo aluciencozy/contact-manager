@@ -122,11 +122,12 @@ dialog {
   font-size: 2.5rem;
   font-weight: bold;
 
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group {
   margin-bottom: 10px;
+
 }
 
 .form-group label {
