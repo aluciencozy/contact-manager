@@ -58,4 +58,44 @@ const getContactInfo = async () =>{
 
 }
 
+const contacts = [
+  {
+    id: 1,
+    first_name: "John",
+    last_name: "Smith",
+    email: "john@email.com",
+    phone_number: "407-555-1234"
+  },
+  {
+    id: 2,
+    first_name: "Jane",
+    last_name: "Doe",
+    email: "jane@email.com",
+    phone_number: "321-555-5678"
+  }
+];
 
+function displayContacts(contacts) {
+  const tableBody = document.getElementById("contactsTableBody");
+
+  tableBody.innerHTML = "";
+
+  contacts.forEach((contact) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${contact.first_name}</td>
+      <td>${contact.last_name}</td>
+      <td>${contact.email}</td>
+      <td>${contact.phone_number}</td>
+      <td class="contact-actions">
+        <button class="editContactButton">Edit</button>
+        <button class="deleteContactButton">Delete</button>
+      </td>
+    `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+displayContacts(contacts);

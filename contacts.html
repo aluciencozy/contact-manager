@@ -7,49 +7,89 @@
     <title>Contact Manager</title>
     <link rel="stylesheet" href="css/styles.css" />
     <script type="module" src="js/contacts.js"></script>
-    <script tpye="module" src="js/auth.js"></script>
+    <script type="module" src="js/auth.js"></script>
   </head>
 
   <body>
-    <h1>Contacts</h1>
-    <button id="addContactButton" type="button">Add Contact</button>
-    <dialog id="contactDialog" closedby="any"> 
-      <form id="contactForm" action="">
 
-         <label>First Name
-          <input name="first_name" required>
-         </label>
-         <br/>
-         <label>
-          Last name
-          <input name="last_name" required>
-         </label>
+    <div id="contactsContainer" class="contacts-container">
+      
+      <h1 class="contacts-title">Contacts</h1>
 
-         <br/>
-         <label>
-          Email
-          <input name="email" type="email">
-         </label>
+      <button id="logoutButton" class="logoutButton">Logout</button>
 
-         <br/>
-         <label>
-          Phone Number
-          <input name="phone_number" required>
-         </label>
-         <br/>
-         <br/>
+      <div class= "search-add-container">
+        <input type="search" id="search" placeholder="Search contacts..." />
+        
+        <button id="addContactButton" class="addContactButton" type="button">Add Contact</button>
+      </div>
 
-        <button type="submit">Save contact</button>
-        <button id="cancelContactButton" type="button">Cancel</button>
-      </form>
-    </dialog>
+      <p id="contactResultMessage" class="result-message"></p>
 
-    <p id="contactResultMessage"></p>
+      <!-- Add Contact Modal -->
+      <dialog id="contactDialog" closedby="any"> 
 
-    <div id="contactsContainer"></div>
+        <div class="form-container">  
 
-    <br/>
-    <br/>
-    <button id="logoutButton">Logout</button>
+          <h2>Add Contact</h2>
+
+          <form id="contactForm" action="">
+
+            <div class="form-group">
+              <label>First Name
+                <input name="first_name" required>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label>
+                Last name
+                <input name="last_name" required>
+              </label>
+            </div>
+
+          <div class="form-group">
+              <label>
+                Email
+                <input name="email" type="email">
+              </label>
+          </div>
+
+          <div class="form-group">
+              <label>
+                Phone Number
+                <input name="phone_number" required>
+              </label>
+          </div>
+
+            <button type="submit" class="form-btn">Save contact</button>
+            <button id="cancelContactButton" type="button" class="form-btn">Cancel</button>
+
+          </form>
+        </div>
+      </dialog>
+
+      <!-- Results, Edit, and Delete Table Container -->
+      <div class="contacts-table-container">
+        <table class="contacts-table">
+
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Phone Number</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody id="contactsTableBody">
+            <!-- JS will put contacts here -->
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
   </body>
 </html>
