@@ -36,7 +36,7 @@ contactForm.addEventListener("submit", async (event) => {
         contactResultMessage.style.color = "green"
     }
     else{
-        contactResultMessage.textContent = "failed to make a new contact" + result.message;
+        contactResultMessage.textContent = "failed to make a new contact " + result.message;
         contactResultMessage.style.color = "red"
     }
 
@@ -44,20 +44,25 @@ contactForm.addEventListener("submit", async (event) => {
 });
 
 // once the new contact is created we will reload all contacts using GET
-const getContactInfo = async () =>{
+const getContactInfo = async (search = "") =>{
+    var fetchCall = "/api/contacts/get.php";
 
-    const response = await fetch("/api/contacts/get.php",{
+    if (search != ""){
+        fetchCall = fetchCall + "?search=" + search;   // modiefies fetch call to include search if getContactInfo was called with a search
+    }
+
+    const response = await fetch(fetchCall,{
         method: "GET", 
     })
 
     const result = await response.json();
 
-    contactsContainer.textContent = "";
-
-
+    //calling to display all contacts from the users DB
+    displayContacts(result.contacts);
 
 }
 
+// currently example contacts remove once branch is on main  
 const contacts = [
   {
     id: 1,
@@ -87,7 +92,7 @@ function displayContacts(contacts) {
       <td>${contact.first_name}</td>
       <td>${contact.last_name}</td>
       <td>${contact.email}</td>
-      <td>${contact.phone_number}</td>
+      <td>${contact.phone}</td>
       <td class="contact-actions">
         <button class="editContactButton">Edit</button>
         <button class="deleteContactButton">Delete</button>
@@ -98,4 +103,10 @@ function displayContacts(contacts) {
   });
 }
 
-displayContacts(contacts);
+
+getContactInfo();
+ displayContacts(contacts); // remove when on main so the table doesnt reset the call before 
+
+const searchContainer = document.getElementById("search");
+
+searchContainer.addEventListener("input", () => {getContactInfo(searchContainer.value.trim());} )
