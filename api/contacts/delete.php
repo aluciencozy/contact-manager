@@ -6,8 +6,8 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 //get variables from database and response helper
-require __DIR__ . "/config/database.php";
-require __DIR__ . "/helpers/response.php";
+require __DIR__ . "/../config/database.php";
+require __DIR__ . "/../helpers/response.php";
 
 //decodes input to use
 $contact_data = json_decode(file_get_contents("php://input"), true);
@@ -16,6 +16,7 @@ $contact_data = json_decode(file_get_contents("php://input"), true);
     i designed them off of the idea of the button passing the id of the user*/
 $id=$contact_data["id"] ?? "";
 
+//takes in user id
 $userId = filter_var(
     $_SESSION["user_id"] ?? null,
     FILTER_VALIDATE_INT,
@@ -40,7 +41,7 @@ $stmt->bind_param("ii", $id, $userId);
 if(!$stmt->execute()){
     sendResponse(500, false, "failed to delete contact");
 }
-else sendResponse(200, true, "contact successfullly deleted");
+else sendResponse(201, true, "contact successfullly deleted");
 
 $stmt->close();
 $conn->close();
