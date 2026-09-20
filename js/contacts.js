@@ -7,7 +7,7 @@ const contactsContainer = document.getElementById("contactsContainer");
 
 addButton.addEventListener("click", () => { dialog.showModal(); });
 
-cancelButton.addEventListener("click", () => { dialog.close(); });
+cancelButton.addEventListener("click", () => { dialogError.textContent = ""; dialog.close(); });
 
 const contactResultMessage = document.getElementById("contactResultMessage");
 
@@ -23,8 +23,8 @@ contactForm.addEventListener("submit", async (event) => {
     const response = await fetch("/api/contacts/create.php",{
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({firstName, lastName,
-            email,  phoneNumber}),
+        body: JSON.stringify({first_name: firstName, last_name: lastName,
+            email, phone: phoneNumber}),
     }
     );
 
@@ -32,15 +32,23 @@ contactForm.addEventListener("submit", async (event) => {
 
     if (response.ok && result.success){
         getContactInfo();
+        dialog.close();
+        contactForm.reset()
+
+
         contactResultMessage.textContent = "New contact created!"
         contactResultMessage.style.color = "green"
+        setTimeout(() => { contactResultMessage.textContent = ""; }, 4000);
     }
     else{
         contactResultMessage.textContent = "failed to make a new contact " + result.message;
         contactResultMessage.style.color = "red"
+        setTimeout(() => { contactResultMessage.textContent = ""; }, 4000);
     }
+    
 
-  dialog.close();
+    
+
 });
 
 // once the new contact is created we will reload all contacts using GET
@@ -48,7 +56,7 @@ const getContactInfo = async (search = "") =>{
     var fetchCall = "/api/contacts/get.php";
 
     if (search != ""){
-        fetchCall = fetchCall + "?search=" + search;   // modiefies fetch call to include search if getContactInfo was called with a search
+        fetchCall = fetchCall + "?search=" + encodeURIComponent(search);   // modiefies fetch call to include search if getContactInfo was called with a search
     }
 
     const response = await fetch(fetchCall,{
@@ -105,7 +113,7 @@ function displayContacts(contacts) {
 
 
 getContactInfo();
- displayContacts(contacts); // remove when on main so the table doesnt reset the call before 
+// displayContacts(contacts); // remove when on main so the table doesnt reset the call before 
 
 const searchContainer = document.getElementById("search");
 
