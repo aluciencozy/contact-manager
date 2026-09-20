@@ -6,16 +6,16 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 //get variables from database and response helper
-require __DIR__ . "/config/database.php";
-require __DIR__ . "/helpers/response.php";
+require __DIR__ . "/../config/database.php";
+require __DIR__ . "/../helpers/response.php";
 
 //decodes input to use
 $user_data = json_decode(file_get_contents("php://input"), true);
 
-$first_name=$user_data["first_name"] ?? "";
-$last_name=$user_data["last_name"] ?? "";
-$email=$user_data["email"] ?? "";
-$phone=$user_data["phone"] ?? "";
+$first_name=trim($user_data["first_name"] ?? "");
+$last_name=trim($user_data["last_name"] ?? "");
+$email=trim($user_data["email"] ?? "");
+$phone=trim($user_data["phone"] ?? "");
 
 $userId = filter_var(
     $_SESSION["user_id"] ?? null,
@@ -53,10 +53,6 @@ if($conn->connect_error){
 $stmt =  $conn->prepare("INSERT INTO Contacts (user_id, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?)");
 $stmt->bind_param("issss", $userId, $first_name, $last_name, $email, $phone); 
 if($stmt->execute())
-    sendResponse(200, true, "Contact created");
+    sendResponse(201, true, "Contact created");
 else
     sendResponse(500, false, "Contact failed to create");
-
-//closes open statement and connection
-$stmt->close();
-$conn->close();
