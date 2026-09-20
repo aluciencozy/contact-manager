@@ -10,21 +10,34 @@
   </head>
 
   <body>
-    <h1>Login</h1>
 
-    <form id="loginForm">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
-      <br />
+    <div class="form-container">
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
+      <h1 class="form-title">Login</h1>
 
-      <button type="submit" id="loginButton">Login</button>
-    </form>
+      <form id="loginForm">
+
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" placeholder="Enter your Username" autocomplete="username" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" placeholder="Enter your Password" autocomplete="current-password" required />
+        </div>
+
+        <button type="submit" id="loginButton" class="form-btn">Login</button>
+
+      </form>
     
-    <p id="loginResultMessage"></p>
+      <div class="form-footer">
+        <p id="loginResultMessage"></p>
+        <p>Don't have an account? <a href="register.html">Register here.</a></p>
+      </div>
+      
 
-    <p>Don't have an account? <a href="register.html">Register here.</a></p>
+    </div>
+    
   </body>
 </html>
