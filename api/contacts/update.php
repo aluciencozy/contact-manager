@@ -21,6 +21,20 @@ $last_name=$contact_data["last_name"] ?? "";
 $email=$contact_data["email"] ?? "";
 $phone=$contact_data["phone"] ?? "";
 
+//check if variables are valid
+if($first_name=="" || strlen($first_name)>100){
+    sendResponse(400, false, "Invalid first_name");
+}
+if($last_name=="" || strlen($last_name)>100){
+    sendResponse(400, false, "Invalid last_name");
+}
+if($email=="" || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email)>254){
+    sendResponse(400, false, "Invalid email");
+}
+if($phone=="" || strlen($phone)>20 || !preg_match('/^[0-9]+$/', $phone)){
+    sendResponse(400, false, "Invalid phone number");
+}
+
 //connect to database
 $conn = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
 if($conn->connect_error){
@@ -30,9 +44,8 @@ if($conn->connect_error){
 //navigates to the row of the given id changing the other variables based off the input
 $stmt = $conn->prepare("UPDATE Contacts SET first_name=?, last_name=?, email=?, phone=? WHERE id=?");
 $stmt->bind_param("ssssi", $first_name, $last_name, $email, $phone, $id); 
-$stmt->execute(); 
 
-//checks if the code properly ran
+//checks if the code properly ran and runs the statement
 if(!$stmt->execute()){
     sendResponse(500, false, "failed to update contact");
 }
