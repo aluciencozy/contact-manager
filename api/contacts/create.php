@@ -16,7 +16,16 @@ $first_name=$user_data["first_name"] ?? "";
 $last_name=$user_data["last_name"] ?? "";
 $email=$user_data["email"] ?? "";
 $phone=$user_data["phone"] ?? "";
-$user_id=$_SESSION["user_id"];
+
+$userId = filter_var(
+    $_SESSION["user_id"] ?? null,
+    FILTER_VALIDATE_INT,
+    ["options" => ["min_range" => 1]]
+);
+
+if ($userId === false) {
+    sendResponse(401, false, "You must be logged in", ["contacts" => []]);
+}
 
 
 //check if variables are valid
@@ -44,7 +53,7 @@ if($conn->connect_error){
 $stmt =  $conn->prepare("INSERT INTO Contacts (user_id, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?)");
 $stmt->bind_param("issss", $user_id, $first_name, $last_name, $email, $phone); 
 if($stmt->execute())
-    sendResponse(500, true, "Contact created");
+    sendResponse(200, true, "Contact created");
 else
     sendResponse(500, false, "Contact failed to create");
 
