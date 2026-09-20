@@ -88,5 +88,9 @@ $stmt->bind_param("ssss", $username, $email, $phone, $hashPassword);
 $stmt->execute(); 
 $stmt->close();
 
+//set's User_id to the newly created account and returns a success
+$_SESSION["user_id"]=$conn->insert_id;
+sendResponse(201, true, "Account created successfully");
+
 //closes connection
 $conn->close();
