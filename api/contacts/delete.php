@@ -29,7 +29,6 @@ if($conn->connect_error){
 //navigates to the row of the given id and deletes it
 $stmt = $conn->prepare("DELETE FROM Contacts WHERE id=?");
 $stmt->bind_param("i", $id); 
-$stmt->execute(); 
 
 //checks if the code properly ran
 if(!$stmt->execute()){
