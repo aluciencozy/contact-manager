@@ -15,10 +15,16 @@ $contact_data = json_decode(file_get_contents("php://input"), true);
 /*not sure exactly how you want the buttons to work so for now 
     i designed them off of the idea of the button passing the id of the user*/
 $id=$contact_data["id"] ?? "";
-$first_name=$contact_data["first_name"] ?? "";
-$last_name=$contact_data["last_name"] ?? "";
-$email=$contact_data["email"] ?? "";
-$phone=$contact_data["phone"] ?? "";
+
+$userId = filter_var(
+    $_SESSION["user_id"] ?? null,
+    FILTER_VALIDATE_INT,
+    ["options" => ["min_range" => 1]]
+);
+
+if ($userId === false) {
+    sendResponse(401, false, "You must be logged in", ["contacts" => []]);
+}
 
 //connect to database
 $conn = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
@@ -27,14 +33,14 @@ if($conn->connect_error){
 }
 
 //navigates to the row of the given id and deletes it
-$stmt = $conn->prepare("DELETE FROM Contacts WHERE id=?");
-$stmt->bind_param("i", $id); 
+$stmt = $conn->prepare("DELETE FROM Contacts WHERE id=? AND user_id = ?");
+$stmt->bind_param("ii", $id, $userId); 
 
 //checks if the code properly ran
 if(!$stmt->execute()){
     sendResponse(500, false, "failed to delete contact");
 }
-else sendResponse(400, true, "contact successfullly deleted");
+else sendResponse(200, true, "contact successfullly deleted");
 
 $stmt->close();
 $conn->close();
