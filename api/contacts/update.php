@@ -58,7 +58,7 @@ $stmt->bind_param("ssssii", $first_name, $last_name, $email, $phone, $id, $userI
 if(!$stmt->execute()){
     sendResponse(500, false, "failed to update contact");
 }
-else sendResponse(201, true, "contact successfullly updated");
+else sendResponse(200, true, "contact successfullly updated");
 
 $stmt->close();
 $conn->close();

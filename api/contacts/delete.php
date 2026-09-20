@@ -41,7 +41,7 @@ $stmt->bind_param("ii", $id, $userId);
 if(!$stmt->execute()){
     sendResponse(500, false, "failed to delete contact");
 }
-else sendResponse(201, true, "contact successfullly deleted");
+else sendResponse(200, true, "contact successfullly deleted");
 
 $stmt->close();
 $conn->close();
