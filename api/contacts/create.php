@@ -42,8 +42,7 @@ if($conn->connect_error){
 
 //prepares the statement to insert into contacts table
 $stmt =  $conn->prepare("INSERT INTO Contacts (user_id, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("issss", $user_id, $first_name, $last_name, $email, $phone);
-$stmt->execute(); 
+$stmt->bind_param("issss", $user_id, $first_name, $last_name, $email, $phone); 
 if($stmt->execute())
     sendResponse(500, true, "Contact created");
 else
