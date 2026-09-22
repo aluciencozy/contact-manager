@@ -518,7 +518,6 @@ button {
 
 .deleteButtonNo {
   background-color: var(--pastel-blue);
-  color: var(text-dark);
 }
 
 .deleteButtonYes:hover {

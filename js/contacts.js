@@ -106,7 +106,7 @@ editContactForm.addEventListener("submit", async (event) => {
   const phoneNumber = editedContactData.get("phone_number");
 
   const response = await fetch("/api/contacts/update.php", {
-    method: "POST",
+    method: "PUT",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({id: editContactID, first_name: firstName, last_name: lastName, email, phone: phoneNumber})
   });
