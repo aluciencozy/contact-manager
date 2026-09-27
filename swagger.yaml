@@ -8,7 +8,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://YOUR-DOMAIN-HERE
+  - url: http://smallproj.cop4331cfall26jo.com/
     description: Production server
 
 paths:
