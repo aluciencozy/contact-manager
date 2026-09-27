@@ -11,6 +11,9 @@ servers:
   - url: http://smallproj.cop4331cfall26jo.com/
     description: Production server
 
+security:
+  - sessionCookie: []
+
 paths:
   /api/register.php:
     post:
@@ -20,6 +23,7 @@ paths:
         unique. Phone must be exactly 10 digits. On success a session is
         started and the user is logged in automatically.
       operationId: registerUser
+      security: []
       requestBody:
         required: true
         content:
@@ -113,6 +117,7 @@ paths:
         Authenticates a user with their username and password.
         On success a server-side session is created and a session cookie is returned.
       operationId: loginUser
+      security: []
       requestBody:
         required: true
         content:
@@ -517,6 +522,12 @@ paths:
                 message: failed to delete contact
 
 components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+      description: PHP session cookie, set by login or register
   schemas:
     SuccessResponse:
       type: object
