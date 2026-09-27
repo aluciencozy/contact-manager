@@ -1,0 +1,572 @@
+openapi: 3.0.3
+info:
+  title: Contact Manager API
+  description: >
+    REST API for the Personal Contact Manager application.
+    Users can register, log in, and manage their own private contacts.
+    All communication uses JSON. Authentication is handled via server-side PHP sessions.
+  version: 1.0.0
+
+servers:
+  - url: https://YOUR-DOMAIN-HERE
+    description: Production server
+
+paths:
+  /api/register.php:
+    post:
+      summary: Register a new user
+      description: >
+        Creates a new user account. Username, email, and phone must each be
+        unique. Phone must be exactly 10 digits. On success a session is
+        started and the user is logged in automatically.
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - phone
+                - password
+              properties:
+                username:
+                  type: string
+                  maxLength: 50
+                  example: jane_doe
+                email:
+                  type: string
+                  format: email
+                  maxLength: 254
+                  example: jane@example.com
+                phone:
+                  type: string
+                  pattern: '^[0-9]{10}$'
+                  description: Exactly 10 digits, no dashes or spaces
+                  example: '3215551234'
+                password:
+                  type: string
+                  example: MySecurePass1!
+      responses:
+        '201':
+          description: Account created successfully — user is logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+                message: Account created successfully
+        '400':
+          description: Validation error or duplicate account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidUsername:
+                  summary: Invalid username
+                  value:
+                    success: false
+                    message: Invalid username
+                invalidEmail:
+                  summary: Invalid email
+                  value:
+                    success: false
+                    message: Invalid email
+                invalidPhone:
+                  summary: Invalid phone number
+                  value:
+                    success: false
+                    message: Invalid phone number
+                duplicateUsername:
+                  summary: Username already taken
+                  value:
+                    success: false
+                    message: An account with this username already exists
+                duplicateEmail:
+                  summary: Email already taken
+                  value:
+                    success: false
+                    message: An account with this email already exists
+                duplicatePhone:
+                  summary: Phone already taken
+                  value:
+                    success: false
+                    message: An account with this phone number already exists
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Connection failed
+
+  /api/login.php:
+    post:
+      summary: User Login
+      description: >
+        Authenticates a user with their username and password.
+        On success a server-side session is created and a session cookie is returned.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  maxLength: 50
+                  example: demo_user
+                password:
+                  type: string
+                  example: ContactTest123!
+      responses:
+        '200':
+          description: Login successful — session cookie is set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+                message: Successfully logged in
+        '400':
+          description: Missing or empty username / password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Invalid username or password
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Invalid username or password
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Error connecting to the database
+
+  /api/logout.php:
+    post:
+      summary: User Logout
+      description: >
+        Destroys the current server-side session, effectively logging the user out.
+      operationId: logoutUser
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+                message: Successfully logged out
+
+  /api/contacts/create.php:
+    post:
+      summary: Create a new contact
+      description: >
+        Adds a new contact for the currently logged-in user.
+        Requires an active session.
+      operationId: createContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - first_name
+                - last_name
+                - email
+                - phone
+              properties:
+                first_name:
+                  type: string
+                  maxLength: 100
+                  example: John
+                last_name:
+                  type: string
+                  maxLength: 100
+                  example: Doe
+                email:
+                  type: string
+                  format: email
+                  maxLength: 254
+                  example: john.doe@example.com
+                phone:
+                  type: string
+                  maxLength: 20
+                  pattern: '^[0-9]+$'
+                  description: Digits only
+                  example: '4075550101'
+      responses:
+        '201':
+          description: Contact created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+                message: Contact created
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidFirstName:
+                  summary: Invalid first name
+                  value:
+                    success: false
+                    message: Invalid first_name
+                invalidLastName:
+                  summary: Invalid last name
+                  value:
+                    success: false
+                    message: Invalid last_name
+                invalidEmail:
+                  summary: Invalid email
+                  value:
+                    success: false
+                    message: Invalid email
+                invalidPhone:
+                  summary: Invalid phone number
+                  value:
+                    success: false
+                    message: Invalid phone number
+        '401':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: You must be logged in
+                contacts: []
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Contact failed to create
+
+  /api/contacts/get.php:
+    get:
+      summary: Search / list contacts
+      description: >
+        Returns the logged-in user's contacts. When the optional `search`
+        query parameter is provided, results are filtered using partial
+        matching (SQL `LIKE '%term%'`) across first name, last name,
+        email, and phone number. Results are sorted alphabetically by
+        last name, then first name.
+      operationId: searchContacts
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: >
+            Partial-match search term. For example, `Jo` matches both
+            "John" and "Joanna". Omit to retrieve all contacts.
+          schema:
+            type: string
+          example: Jo
+      responses:
+        '200':
+          description: Contacts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Contacts retrieved successfully
+                  contacts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Contact'
+              example:
+                success: true
+                message: Contacts retrieved successfully
+                contacts:
+                  - id: 1
+                    first_name: John
+                    last_name: Doe
+                    email: john.doe@example.com
+                    phone: '4075550101'
+                    created_at: '2026-09-20T14:30:00Z'
+                    updated_at: '2026-09-20T14:30:00Z'
+                  - id: 2
+                    first_name: Joanna
+                    last_name: Smith
+                    email: joanna.smith@example.com
+                    phone: '4075550102'
+                    created_at: '2026-09-20T14:30:00Z'
+                    updated_at: '2026-09-20T14:30:00Z'
+        '401':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: You must be logged in
+                contacts: []
+        '405':
+          description: HTTP method not allowed (only GET is accepted)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Method not allowed
+                contacts: []
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Error retrieving contacts
+                contacts: []
+
+  /api/contacts/update.php:
+    put:
+      summary: Update an existing contact
+      description: >
+        Updates the fields of a contact that belongs to the logged-in user.
+        The contact is identified by `id` in the request body.
+      operationId: updateContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - first_name
+                - last_name
+                - email
+                - phone
+              properties:
+                id:
+                  type: integer
+                  description: The ID of the contact to update
+                  example: 1
+                first_name:
+                  type: string
+                  maxLength: 100
+                  example: Jonathan
+                last_name:
+                  type: string
+                  maxLength: 100
+                  example: Doe
+                email:
+                  type: string
+                  format: email
+                  maxLength: 254
+                  example: jonathan.doe@example.com
+                phone:
+                  type: string
+                  maxLength: 20
+                  pattern: '^[0-9]+$'
+                  example: '4075550199'
+      responses:
+        '200':
+          description: Contact updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+                message: contact successfullly updated
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidFirstName:
+                  summary: Invalid first name
+                  value:
+                    success: false
+                    message: Invalid first_name
+                invalidLastName:
+                  summary: Invalid last name
+                  value:
+                    success: false
+                    message: Invalid last_name
+                invalidEmail:
+                  summary: Invalid email
+                  value:
+                    success: false
+                    message: Invalid email
+                invalidPhone:
+                  summary: Invalid phone number
+                  value:
+                    success: false
+                    message: Invalid phone number
+        '401':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: You must be logged in
+                contacts: []
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: failed to update contact
+
+  /api/contacts/delete.php:
+    delete:
+      summary: Delete a contact
+      description: >
+        Deletes a contact that belongs to the logged-in user.
+        The contact is identified by `id` in the request body.
+      operationId: deleteContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  description: The ID of the contact to delete
+                  example: 1
+      responses:
+        '200':
+          description: Contact deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+                message: contact successfullly deleted
+        '401':
+          description: User is not logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: You must be logged in
+                contacts: []
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: failed to delete contact
+
+components:
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Operation completed successfully
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: An error occurred
+
+    Contact:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Auto-generated contact ID
+          example: 1
+        first_name:
+          type: string
+          description: Contact's first name
+          example: John
+        last_name:
+          type: string
+          description: Contact's last name
+          example: Doe
+        email:
+          type: string
+          format: email
+          description: Contact's email address
+          example: john.doe@example.com
+        phone:
+          type: string
+          description: Contact's phone number (digits only)
+          example: '4075550101'
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the contact was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the contact was last updated
